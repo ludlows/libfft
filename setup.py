@@ -26,6 +26,7 @@ extensions = [
         "libfftcy",
         ["libfft/libfftcy.pyx", "libfft/ludlows_libfft.h"],
         include_dirs=["libfft"],
+        compiler_directives={'language_level': '3'},
         language="c")
 ]
 
