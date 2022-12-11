@@ -92,6 +92,10 @@ struct fft_ctx_double* init_fft_ctx_double(unsigned long n) {
         return NULL;
     }
     p_ctx->x = (double *)p_ctx_x;
+    unsigned long len = n<<1;
+    for(unsigned long i=0; i < len; i++){
+        p_ctx->x[i] = 0.0f;
+    }
     return p_ctx;
 }
 
