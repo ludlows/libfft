@@ -260,10 +260,10 @@ void ifft_float_inplace(float * x, struct fft_ctx_float* ctx) {
         return;
     }
     unsigned long n_point = ctx->n_fft;
-    if (n_point <= 1) return;
-    // unsigned long * buffer_info = (unsigned long *)malloc(sizeof(unsigned long) * (n_point >> 1));
-    // float * cos_sin_info = (float *)malloc(sizeof(float) * (n_point));
-    // unsigned long * bit_swap = (unsigned long *)malloc(sizeof(unsigned long) * (n_point));
+    if (n_point <= 1) {
+        printf("Error! nFFT <= 1!\n");
+        return;
+    }
     unsigned long * buffer_info = ctx->buffer_info;
     float * cos_sin_info = ctx->cos_sin_info;
     unsigned long * bit_swap = ctx->bit_swap;
@@ -347,7 +347,10 @@ void fft_double_inplace(double * x, struct fft_ctx_double* ctx) {
         return;
     }
     unsigned long n_point = ctx->n_fft;
-    if (n_point <= 1) return;
+    if (n_point <= 1){
+        printf("Error! nFFT <= 1.\n");
+        return;
+    }
     unsigned long * buffer_info = ctx->buffer_info;
     double * cos_sin_info = ctx->cos_sin_info;
     unsigned long * bit_swap = ctx->bit_swap;
