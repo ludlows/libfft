@@ -94,8 +94,8 @@ fft_ctx_double_ptr init_fft_ctx_double(unsigned long n) {
         return NULL;
     }
     p_ctx->x = (double *)p_ctx_x;
-    unsigned long len = n<<1;
-    for(unsigned long i=0; i < len; i++){
+    unsigned long len = n << 1;
+    for (unsigned long i = 0; i < len; i++) {
         p_ctx->x[i] = 0.0f;
     }
     return p_ctx;
@@ -293,7 +293,7 @@ void ifft_double_inplace(fft_ctx_double_ptr ctx_ptr) {
             x[index2] = index1_real;
         }
     }
-    unsigned long N = ctx->n_fft;
+    unsigned long N = ctx_ptr->n_fft;
     len = (N << 1);
     for (unsigned long i = 0; i < len; i++) { // normalization
         x[i] /= N;
