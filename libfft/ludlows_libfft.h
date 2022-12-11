@@ -16,10 +16,10 @@ array[1] is the complex part of x(0)
 
 struct fft_ctx_double {
     unsigned long n_fft;
-    unsigned long * buffer_info; // n_fft >> 1
-    unsigned long * bit_swap;    // n_fft
-    double * cos_sin_info;       // n_fft
-    //double * array;              // n_fft << 1, real and image parts
+    unsigned long * buffer_info;   // n_fft >> 1
+    unsigned long * bit_swap;      // n_fft
+    double * cos_sin_info;         // n_fft
+    double * x;                    // n_fft << 1, real and image parts
 };
 
 // init fft_ctx_double
@@ -63,6 +63,7 @@ struct fft_ctx_double* init_fft_ctx_double(unsigned long n) {
     p_ctx->buffer_info = NULL;
     p_ctx->cos_sin_info = NULL;
     p_ctx->bit_swap = NULL;
+    p_ctx->x = NULL;
     void * p_ctx_buffer_info = malloc(sizeof(unsigned long) * (n >> 1));
     if (p_ctx_buffer_info == NULL) {
         printf("allocate memory of buffer_info failed!\n");
@@ -84,6 +85,12 @@ struct fft_ctx_double* init_fft_ctx_double(unsigned long n) {
         return NULL;
     }
     p_ctx->bit_swap = (unsigned long *)p_ctx_bit_swap;
+    void * p_ctx_x = malloc(sizeof(double) * (n<<1) );
+    if (p_ctx_x == NULL) {
+        printf("allocate memory of x failed!\n");
+        free_fft_ctx_double(p_ctx);
+        return NULL;
+    }
     return p_ctx;
 }
 
@@ -95,6 +102,8 @@ void free_fft_ctx_double(struct fft_ctx_double* pointer) {
     pointer->buffer_info = NULL;
     free(pointer->cos_sin_info);
     pointer->cos_sin_info = NULL;
+    free(pointer->x);
+    pointer->x = NULL;
     free(pointer);
     pointer = NULL;
 }
@@ -106,7 +115,7 @@ x: length 2 * n_point, signal x(n) whose length is n_point only
 x[0]: signal x(0)'s real part
 x[1]: signal x(0)'s image part
 */
-void fft_double_inplace(double * x, struct fft_ctx_double* ctx) {
+void fft_double_inplace(struct fft_ctx_double* ctx) {
     if(ctx == NULL) {
         printf("Error! fft context is NULL.\n");
         return;
@@ -116,6 +125,7 @@ void fft_double_inplace(double * x, struct fft_ctx_double* ctx) {
         printf("Error! nFFT <= 1.\n");
         return;
     }
+    double * x = ctx->x;
     unsigned long * buffer_info = ctx->buffer_info;
     double * cos_sin_info = ctx->cos_sin_info;
     unsigned long * bit_swap = ctx->bit_swap;
@@ -195,13 +205,14 @@ x: length 2 * n_point, spectrum X(n) whose length is n_point only
 x[0]: spectrum X(0)'s real part
 x[1]: spectrum X(0)'s image part
 */
-void ifft_double_inplace(double * x, struct fft_ctx_double* ctx) {
+void ifft_double_inplace(struct fft_ctx_double* ctx) {
     if (ctx == NULL) {
         printf("Error! fft context is NULL.\n");
         return;
     }
     unsigned long n_point = ctx->n_fft;
     if (n_point <= 1) return;
+    double * x = ctx->x;
     unsigned long * buffer_info = ctx->buffer_info;
     double * cos_sin_info = ctx->cos_sin_info;
     unsigned long * bit_swap = ctx->bit_swap;
