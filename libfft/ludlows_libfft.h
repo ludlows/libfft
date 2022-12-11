@@ -147,17 +147,25 @@ struct fft_ctx_double* init_fft_ctx_double(unsigned long n) {
 void free_fft_ctx_float(struct fft_ctx_float* pointer) {
     if (pointer == NULL) return;
     free(pointer->bit_swap);
+    pointer->bit_swap = NULL;
     free(pointer->buffer_info);
+    pointer->buffer_info = NULL;
     free(pointer->cos_sin_info);
+    pointer->cos_sin_info = NULL;
     free(pointer);
+    pointer = NULL;
 }
 
 void free_fft_ctx_double(struct fft_ctx_double* pointer) {
     if (pointer == NULL) return;
     free(pointer->bit_swap);
+    pointer->bit_swap = NULL;
     free(pointer->buffer_info);
+    pointer->buffer_info = NULL;
     free(pointer->cos_sin_info);
+    pointer->cos_sin_info = NULL;
     free(pointer);
+    pointer = NULL;
 }
 
 /*
