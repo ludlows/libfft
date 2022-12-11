@@ -179,13 +179,13 @@ void fft_float_inplace(float * x, struct fft_ctx_float* ctx) {
     unsigned long * bit_swap = ctx->bit_swap;
     register float theta, index1_real, index2_real, index1_image, index2_image;
     unsigned long k = 0;
-    // intialize cos_sin_info
+    // initialize cos_sin_info
     for (unsigned long i = 0, k =0; i < (n_point>>1); i++) {
         theta = 6.283185307179586f * i / n_point;
         cos_sin_info[k++] = cosf(theta);
         cos_sin_info[k++] = sinf(theta);
     }
-    // intialize buffer_info
+    // initialize buffer_info
     buffer_info[0] = 0;
     k = n_point >> 2;
     unsigned long len = 1;
@@ -248,7 +248,7 @@ void fft_float_inplace(float * x, struct fft_ctx_float* ctx) {
 
 
 /*
-n_point invserse fast fourier transform
+n_point inverse fast fourier transform
 n_point: integer , power of 2
 x: length 2 * n_point, spectrum X(n) whose length is n_point only
 x[0]: spectrum X(0)'s real part
@@ -269,13 +269,13 @@ void ifft_float_inplace(float * x, struct fft_ctx_float* ctx) {
     unsigned long * bit_swap = ctx->bit_swap;
     register float theta, index1_real, index2_real, index1_image, index2_image;
     unsigned long k = 0;
-    // intialize cos_sin_info
+    // initialize cos_sin_info
     for (unsigned long i = 0, k = 0; i < (n_point >> 1); i++) {
         theta = 6.283185307179586f * i / n_point;
         cos_sin_info[k++] = cosf(theta);
         cos_sin_info[k++] = sinf(theta);
     }
-    // intialize buffer_info
+    // initialize buffer_info
     buffer_info[0] = 0;
     k = n_point >> 2;
     unsigned long len = 1;
@@ -353,13 +353,13 @@ void fft_double_inplace(double * x, struct fft_ctx_double* ctx) {
     unsigned long * bit_swap = ctx->bit_swap;
     register double theta, index1_real, index2_real, index1_image, index2_image;
     unsigned long k = 0;
-    // intialize cos_sin_info
+    // initialize cos_sin_info
     for (unsigned long i = 0, k =0; i < (n_point>>1); i++) {
         theta = 6.283185307179586f * i / n_point;
         cos_sin_info[k++] = cos(theta);
         cos_sin_info[k++] = sin(theta);
     }
-    // intialize buffer_info
+    // initialize buffer_info
     buffer_info[0] = 0;
     k = n_point >> 2;
     unsigned long len = 1;
@@ -432,13 +432,13 @@ void ifft_double_inplace(double * x, struct fft_ctx_double* ctx) {
     unsigned long * bit_swap = ctx->bit_swap;
     register double theta, index1_real, index2_real, index1_image, index2_image;
     unsigned long k = 0;
-    // intialize cos_sin_info
+    // initialize cos_sin_info
     for (unsigned long i = 0, k = 0; i < (n_point >> 1); i++) {
         theta = 6.283185307179586f * i / n_point;
         cos_sin_info[k++] = cos(theta);
         cos_sin_info[k++] = sin(theta);
     }
-    // intialize buffer_info
+    // initialize buffer_info
     buffer_info[0] = 0;
     k = n_point >> 2;
     unsigned long len = 1;
