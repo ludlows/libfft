@@ -22,13 +22,13 @@ struct fft_ctx_double {
     double * x;                    // n_fft << 1, real and image parts
 };
 
-typedef struct fft_ctx_double* fft_ctx_double_ptr;
+typedef struct fft_ctx_double FFT_CTX;
 
 // init fft_ctx_double
-fft_ctx_double_ptr init_fft_ctx_double(unsigned long n); //
+FFT_CTX init_fft_ctx_double(unsigned long n); //
 
 // free fft_ctx_double
-void free_fft_ctx_double(fft_ctx_double_ptr pointer); //
+void free_fft_ctx_double(FFT_CTX* pointer); //
 
 // n >= 1
 int is_power_of_2(unsigned long n);
@@ -37,10 +37,10 @@ int is_power_of_2(unsigned long n);
 unsigned long next_power_of_2(unsigned long x);
 
 // fft
-void fft_double_inplace(fft_ctx_double_ptr ctx_ptr);
+void fft_double_inplace(FFT_CTX* ctx_ptr);
 
 // ifft
-void ifft_double_inplace(fft_ctx_double_ptr ctx_ptr);
+void ifft_double_inplace(FFT_CTX* ctx_ptr);
 
 int is_power_of_2(unsigned long n) { // n>=1
     return ((n & (n - 1)) == 0);
@@ -54,54 +54,50 @@ unsigned long next_power_of_2(unsigned long n) {
     return k;
 }
 
-fft_ctx_double_ptr init_fft_ctx_double(unsigned long n) {
-    void * p = malloc(sizeof(struct fft_ctx_double));
-    if (p == NULL) {
-        printf("allocate memory of struct fft_ctx_double failed!\n");
-        return NULL;
-    }
-    fft_ctx_double_ptr p_ctx = (fft_ctx_double_ptr)p;
-    p_ctx->n_fft = n;
-    p_ctx->buffer_info = NULL;
-    p_ctx->cos_sin_info = NULL;
-    p_ctx->bit_swap = NULL;
-    p_ctx->x = NULL;
+FFT_CTX init_fft_ctx_double(unsigned long n) {
+    FFT_CTX ctx;
+    ctx.n_fft = n;
+    ctx.buffer_info = NULL;
+    ctx.cos_sin_info = NULL;
+    ctx.bit_swap = NULL;
+    ctx.x = NULL;
+
     void * p_ctx_buffer_info = malloc(sizeof(unsigned long) * (n >> 1));
     if (p_ctx_buffer_info == NULL) {
         printf("allocate memory of buffer_info failed!\n");
-        free_fft_ctx_double(p_ctx);
+        free_fft_ctx_double(&ctx);
         return NULL;
     }
-    p_ctx->buffer_info = (unsigned long *)p_ctx_buffer_info;
+    ctx.buffer_info = (unsigned long *)p_ctx_buffer_info;
     void * p_ctx_cos_sin_info = malloc(sizeof(double) * n);
     if (p_ctx_cos_sin_info == NULL) {
         printf("allocate memory of cos_sin_info  failed!\n");
-        free_fft_ctx_double(p_ctx);
+        free_fft_ctx_double(&ctx);
         return NULL;
     }
-    p_ctx->cos_sin_info = (double*)p_ctx_cos_sin_info;
+    ctx.cos_sin_info = (double*)p_ctx_cos_sin_info;
     void * p_ctx_bit_swap = malloc(sizeof(unsigned long) * n);
     if (p_ctx_bit_swap == NULL) {
         printf("allocate memory of bit_swap failed!\n");
-        free_fft_ctx_double(p_ctx);
+        free_fft_ctx_double(&ctx);
         return NULL;
     }
-    p_ctx->bit_swap = (unsigned long *)p_ctx_bit_swap;
+    ctx.bit_swap = (unsigned long *)p_ctx_bit_swap;
     void * p_ctx_x = malloc(sizeof(double) * (n << 1));
     if (p_ctx_x == NULL) {
         printf("allocate memory of x failed!\n");
-        free_fft_ctx_double(p_ctx);
+        free_fft_ctx_double(&ctx);
         return NULL;
     }
-    p_ctx->x = (double *)p_ctx_x;
+    ctx.x = (double *)p_ctx_x;
     unsigned long len = n << 1;
     for (unsigned long i = 0; i < len; i++) {
         p_ctx->x[i] = 0.0f;
     }
-    return p_ctx;
+    return ctx;
 }
 
-void free_fft_ctx_double(fft_ctx_double_ptr pointer) {
+void free_fft_ctx_double(FFT_CTX* pointer) {
     if (pointer == NULL) return;
     free(pointer->bit_swap);
     pointer->bit_swap = NULL;
@@ -111,7 +107,6 @@ void free_fft_ctx_double(fft_ctx_double_ptr pointer) {
     pointer->cos_sin_info = NULL;
     free(pointer->x);
     pointer->x = NULL;
-    free(pointer);
     pointer = NULL;
 }
 
@@ -122,7 +117,7 @@ x: length 2 * n_point, signal x(n) whose length is n_point only
 x[0]: signal x(0)'s real part
 x[1]: signal x(0)'s image part
 */
-void fft_double_inplace(fft_ctx_double_ptr ctx_ptr) {
+void fft_double_inplace(FFT_CTX* ctx_ptr) {
     if (ctx_ptr == NULL) {
         printf("Error! fft context is NULL.\n");
         return;
@@ -212,7 +207,7 @@ x: length 2 * n_point, spectrum X(n) whose length is n_point only
 x[0]: spectrum X(0)'s real part
 x[1]: spectrum X(0)'s image part
 */
-void ifft_double_inplace(fft_ctx_double_ptr ctx_ptr) {
+void ifft_double_inplace(FFT_CTX* ctx_ptr) {
     if (ctx_ptr == NULL) {
         printf("Error! fft context is NULL.\n");
         return;
