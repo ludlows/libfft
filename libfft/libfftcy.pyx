@@ -35,6 +35,14 @@ cdef class FFTContex:
             raise ValueError("n_fft should equal power K of 2!")
         cdef FFT_CTX ctx
         ctx = init_fft_ctx_double(n_fft)
+        if ctx.buffer_info == NULL:
+            raise MemoryError("memory allocated failed")
+        if ctx.bit_swap == NULL:
+            raise MemoryError("memory allocated failed")
+        if ctx.bit_swap == NULL:
+            raise MemoryError("memory allocated failed")
+        if ctx.x == NULL:
+            raise MemoryError("memory allocated failed")
         self._n_fft = n_fft
         self._ctx = ctx
         self._x = ctx.x

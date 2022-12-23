@@ -24,9 +24,8 @@ class CythonExtension(Extension):
 extensions = [
     CythonExtension(
         "libfftcy",
-        ["libfft/libfftcy.pyx", "libfft/ludlows_libfft.h"],
+        ["libfft/libfftcy.pyx"],
         include_dirs=["libfft"],
-        compiler_directives={'language_level': '3'},
         language="c")
 ]
 

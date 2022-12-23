@@ -24,34 +24,16 @@ struct fft_ctx_double {
 
 typedef struct fft_ctx_double FFT_CTX;
 
-// init fft_ctx_double
-FFT_CTX init_fft_ctx_double(unsigned long n); //
-
-// free fft_ctx_double
-void free_fft_ctx_double(FFT_CTX* pointer); //
-
-// n >= 1
-int is_power_of_2(unsigned long n);
-
-// n >= 1
-unsigned long next_power_of_2(unsigned long x);
-
-// fft
-void fft_double_inplace(FFT_CTX* ctx_ptr);
-
-// ifft
-void ifft_double_inplace(FFT_CTX* ctx_ptr);
-
-int is_power_of_2(unsigned long n) { // n>=1
-    return ((n & (n - 1)) == 0);
-}
-
-unsigned long next_power_of_2(unsigned long n) {
-    unsigned long k = 1;
-    while (k < ULONG_MAX && k < n) {
-        k <<= 1;
-    }
-    return k;
+void free_fft_ctx_double(FFT_CTX* pointer) {
+    if (pointer == NULL) return;
+    free(pointer->bit_swap);
+    pointer->bit_swap = NULL;
+    free(pointer->buffer_info);
+    pointer->buffer_info = NULL;
+    free(pointer->cos_sin_info);
+    pointer->cos_sin_info = NULL;
+    free(pointer->x);
+    pointer->x = NULL;
 }
 
 FFT_CTX init_fft_ctx_double(unsigned long n) {
@@ -66,48 +48,35 @@ FFT_CTX init_fft_ctx_double(unsigned long n) {
     if (p_ctx_buffer_info == NULL) {
         printf("allocate memory of buffer_info failed!\n");
         free_fft_ctx_double(&ctx);
-        return NULL;
+        return ctx;
     }
     ctx.buffer_info = (unsigned long *)p_ctx_buffer_info;
     void * p_ctx_cos_sin_info = malloc(sizeof(double) * n);
     if (p_ctx_cos_sin_info == NULL) {
         printf("allocate memory of cos_sin_info  failed!\n");
         free_fft_ctx_double(&ctx);
-        return NULL;
+        return ctx;
     }
     ctx.cos_sin_info = (double*)p_ctx_cos_sin_info;
     void * p_ctx_bit_swap = malloc(sizeof(unsigned long) * n);
     if (p_ctx_bit_swap == NULL) {
         printf("allocate memory of bit_swap failed!\n");
         free_fft_ctx_double(&ctx);
-        return NULL;
+        return ctx;
     }
     ctx.bit_swap = (unsigned long *)p_ctx_bit_swap;
-    void * p_ctx_x = malloc(sizeof(double) * (n << 1));
+    double * p_ctx_x = (double*)malloc(sizeof(double) * (n << 1));
     if (p_ctx_x == NULL) {
         printf("allocate memory of x failed!\n");
         free_fft_ctx_double(&ctx);
-        return NULL;
+        return ctx;
     }
-    ctx.x = (double *)p_ctx_x;
+    ctx.x = p_ctx_x;
     unsigned long len = n << 1;
     for (unsigned long i = 0; i < len; i++) {
-        p_ctx->x[i] = 0.0f;
+        p_ctx_x[i] = 0.0f;
     }
     return ctx;
-}
-
-void free_fft_ctx_double(FFT_CTX* pointer) {
-    if (pointer == NULL) return;
-    free(pointer->bit_swap);
-    pointer->bit_swap = NULL;
-    free(pointer->buffer_info);
-    pointer->buffer_info = NULL;
-    free(pointer->cos_sin_info);
-    pointer->cos_sin_info = NULL;
-    free(pointer->x);
-    pointer->x = NULL;
-    pointer = NULL;
 }
 
 /*
