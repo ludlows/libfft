@@ -1,2 +1,2 @@
-from .libfftcy import FFTContex
-__all__ = ['FFTContex']
+from ._fftctx import FFTCtx
+__all__ = ["FFTCtx"]

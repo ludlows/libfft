@@ -24,7 +24,7 @@ cdef extern from "ludlows_libfft.h":
     cdef void ifft_double_inplace(FFT_CTX* ctx_ptr)
 
 
-cdef class FFTContex:
+cdef class FFTContext:
     cdef FFT_CTX _ctx
     cdef unsigned long _n_fft
     cdef double * _x
