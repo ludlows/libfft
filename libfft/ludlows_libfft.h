@@ -1,6 +1,8 @@
 #ifndef LUDLOWS_LIBFFT_H
 #define LUDLOWS_LIBFFT_H
-
+/*
+Fast Fourier Transform (inplace)
+*/
 #include <math.h>
 #include <limits.h>
 #include <stdio.h>

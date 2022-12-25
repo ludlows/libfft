@@ -1,4 +1,4 @@
-from .libfftcy import FFTContex
+from .libfftcy import FFTContext
 
 
 class FFTCtx:
@@ -15,8 +15,8 @@ class FFTCtx:
         self._ctx = None
 
     def open(self):
-        if self._ctx is not None:
-            self._ctx = FFTContex(self._n_fft)
+        if self._ctx is None:
+            self._ctx = FFTContext(self._n_fft)
 
     def close(self):
         if self._ctx is not None:
@@ -36,6 +36,8 @@ class FFTCtx:
         :param arr_list:
         :return:
         """
+        if len(arr_list) > self._n_fft:
+            raise ValueError("input list is too long!")
         real_in = [(1.0j * v).imag for v in arr_list]
         image_in = [(-1.0j * v).real for v in arr_list]
         real_out, image_out = self._ctx.fft(real_in, image_in)
