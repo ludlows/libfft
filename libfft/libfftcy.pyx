@@ -80,10 +80,32 @@ cdef class FFTContext:
             index += 1
             image_spec.append(x[index])
             index += 1
-
         return (real_spec, image_spec)
 
-
-
-
-
+    cpdef tuple ifft(self, real_arr, image_arr):
+        cdef unsigned long arr_length = len(real_arr)
+        cdef unsigned long n_fft = self._n_fft
+        cdef double * x
+        x = self._x
+        cdef unsigned long i
+        cdef unsigned long index = 0
+        for i in range(arr_length):
+            x[index] = real_arr[i]
+            index += 1
+            x[index] = image_arr[i]
+            index += 1
+        # clean remain x to zeros
+        while index < (n_fft << 1):
+            x[index] = 0
+            index += 1
+        ifft_double_inplace(&self._ctx)
+        # copy outputs
+        real_spec = []
+        image_spec = []
+        index = 0
+        for i in range(n_fft):
+            real_spec.append(x[index])
+            index += 1
+            image_spec.append(x[index])
+            index += 1
+        return (real_spec, image_spec)

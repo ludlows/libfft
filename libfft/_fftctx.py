@@ -33,12 +33,25 @@ class FFTCtx:
     def fft(self, arr_list):
         """
         compute fft spectrum
-        :param arr_list:
-        :return:
+        arr_list: signal x(n)
+        return: [spectrum1, spectrum2, ...], with length of n_fft
         """
         if len(arr_list) > self._n_fft:
             raise ValueError("input list is too long!")
         real_in = [(1.0j * v).imag for v in arr_list]
         image_in = [(-1.0j * v).real for v in arr_list]
         real_out, image_out = self._ctx.fft(real_in, image_in)
+        return [r+i*1j for r, i in zip(real_out, image_out)]
+
+    def ifft(self, spec_list):
+        """
+        inverse fast fourier transform
+        spec_list: spectrum X(K)
+        return: [x(0), x(1), ...], with length of n_fft
+        """
+        if len(spec_list) > self._n_fft:
+            raise ValueError("input list is too long!")
+        real_in = [(1.0j * v).imag for v in spec_list]
+        image_in = [(-1.0j * v).real for v in spec_list]
+        real_out, image_out = self._ctx.ifft(real_in, image_in)
         return [r+i*1j for r, i in zip(real_out, image_out)]
