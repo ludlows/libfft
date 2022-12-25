@@ -1,7 +1,10 @@
 # libfft
 
-fast fourier transform
+fast fourier transform without numpy for some embedded systems
 
+# requirement
+
+C compiler and cython
 
 # install
 ```bash
